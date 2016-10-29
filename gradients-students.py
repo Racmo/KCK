@@ -28,7 +28,6 @@ def plot_color_gradients(gradients, names):
         img = np.zeros((2, 1024, 3))
         for i, v in enumerate(np.linspace(0, 1, 1024)):
             img[:, i] = gradient(v)
-            print(v)
 
         im = ax.imshow(img, aspect='auto')
         im.set_extent([0, 1, 0, 1])
@@ -43,8 +42,42 @@ def plot_color_gradients(gradients, names):
 
 
 def hsv2rgb(h, s, v):
-    #TODO
-    return (h, s, v)
+    if v==0:
+        return(0, 0, 0)
+    else:
+        h=h/60
+        i=np.floor(h)
+        f=h-i
+        p=v*(1-s)
+        q=v*(1-(s*f))
+        t=v*(1-(s*1-f))
+        if i==0:
+            r=v
+            g=t
+            b=p
+        elif i==1:
+            r=q
+            g=v
+            b=p
+        elif i==2:
+            r =p
+            g =v
+            b =t
+        elif i==3:
+            r =p
+            g =q
+            b =v
+        elif i==4:
+            r =t
+            g =p
+            b =v
+        else:
+            r =v
+            g =p
+            b =q
+
+        return (r, g, b)
+
 
 def gradient_rgb_bw(v):
     return (v, v, v)
@@ -98,22 +131,33 @@ def gradient_rgb_wb_custom(v):
 
 
 def gradient_hsv_bw(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    h=0
+    s=0
+    val=v
+
+    return hsv2rgb(h, s, val)
 
 
 def gradient_hsv_gbr(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    s=1
+    val=1
+    h= ((v*240)+120)  #zielony to 120 a czerwony to 1, dzieli je kąt 240 stopni, dodajemy 120 bo chcemy zacząć od zielonego
+    return hsv2rgb(h, s, val)
 
 def gradient_hsv_unknown(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    s=0.5
+    val=1
+    h= (120 - (v*120))
+    print("h: ", h)
+    return hsv2rgb(h, s, val)
 
 
 def gradient_hsv_custom(v):
-    #TODO
-    return hsv2rgb(0, 0, 0)
+    s=1-v
+    print("s:", s)
+    val=1
+    h=v*360
+    return hsv2rgb(h, s, val)
 
 
 if __name__ == '__main__':
