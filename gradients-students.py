@@ -6,6 +6,7 @@ matplotlib.use('Agg')                       # So that we can render files withou
 import matplotlib.pyplot as plt
 from matplotlib import rc
 import numpy as np
+import colorsys as col
 
 from matplotlib import colors
 
@@ -42,41 +43,28 @@ def plot_color_gradients(gradients, names):
 
 
 def hsv2rgb(h, s, v):
-    if v==0:
-        return(0, 0, 0)
-    else:
-        h=h/60
-        i=np.floor(h)
-        f=h-i
-        p=v*(1-s)
-        q=v*(1-(s*f))
-        t=v*(1-(s*1-f))
-        if i==0:
-            r=v
-            g=t
-            b=p
-        elif i==1:
-            r=q
-            g=v
-            b=p
-        elif i==2:
-            r =p
-            g =v
-            b =t
-        elif i==3:
-            r =p
-            g =q
-            b =v
-        elif i==4:
-            r =t
-            g =p
-            b =v
-        else:
-            r =v
-            g =p
-            b =q
+    if s == 0.0:
+        return v, v, v
 
-        return (r, g, b)
+    i = int(h/60)
+    f = (h/60) - i
+    p = v*(1.0 - s)
+    q = v*(1.0 - s*f)
+    t = v*(1.0 - s*(1.0-f))
+    i = i%6
+
+    if i == 0:
+        return v, t, p
+    if i == 1:
+        return q, v, p
+    if i == 2:
+        return p, v, t
+    if i == 3:
+        return p, q, v
+    if i == 4:
+        return t, p, v
+    if i == 5:
+        return v, p, q
 
 
 def gradient_rgb_bw(v):
