@@ -42,6 +42,39 @@ def plot_color_gradients(gradients, names):
     fig.savefig('my-gradients.jpg')
 
 
+#zamienia liste stringow w liste floatow
+def list_to_float(arr):
+    newList = []
+    for item in arr:
+        newList.append(float(item))
+    return newList
+
+
+def load_data(path):
+    data = []
+    i = 0
+    f = open(path, "r")
+    for line in f:
+        if i==0:
+            line = line.split(" ")
+            print(line)
+            width = line[0].replace(" ", "")
+            hight = line[1].replace(" ","")
+            distance = line[2].rstrip("\n")
+            distance = distance.replace(" ","")
+            i=i+1
+        else:
+            line = line.rstrip("\n")
+            line = line.rstrip(" ")
+            line = line.split(" ")
+            # for item in line:
+            #     item = item.rstrip("\n")
+            #     item = item.replace(" ","")
+            data = data + line
+
+    return float(width), float(hight), float(distance), list_to_float(data)
+
+
 def hsv2rgb(h, s, v):
     if s == 0.0:
         return v, v, v
@@ -136,13 +169,13 @@ def gradient_hsv_unknown(v):
     s=0.5
     val=1
     h= (120 - (v*120))
-    print("h: ", h)
+    #print("h: ", h)
     return hsv2rgb(h, s, val)
 
 
 def gradient_hsv_custom(v):
     s=1-v
-    print("s:", s)
+    #print("s:", s)
     val=1
     h=v*360
     return hsv2rgb(h, s, val)
@@ -156,3 +189,7 @@ if __name__ == '__main__':
                  gradient_hsv_bw, gradient_hsv_gbr, gradient_hsv_unknown, gradient_hsv_custom)
 
     plot_color_gradients(gradients, [toname(g) for g in gradients])
+
+    width, hight, distance, data = load_data("data.txt")
+    #print(width, hight, distance)
+    #print("data: ", data)
